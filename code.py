@@ -108,9 +108,15 @@ def train_green(genomes, config):
     clock = pygame.time.Clock()
     score = 0
 
+    for red in reds1:
+        red.vel += 0.001
+
+    for red in reds2:
+        red.vel += 0.001
+
     run = True
     while run and len(greens) > 0:
-        clock.tick(50)
+        clock.tick(1000)
         score += 1
 
         for event in pygame.event.get():
@@ -181,7 +187,115 @@ def train_green(genomes, config):
             if movered2y < 0:
                 reds2[x].y -= reds2[x].vel
 
-        if score > 1250:
+        if score > 5050:
+            pickle_out = open("green-winner.pickle", "wb")
+            pickle.dump(nets[0], pickle_out)
+            pickle_out.close()
+            break
+
+        draw_window(WIN, greens, reds1, reds2, score)
+
+
+def retrain_green(genomes, config):
+
+    global WIN
+
+    nets = []
+    ge = []
+    greens = []
+    reds1 = []
+    reds2 = []
+
+    for _, g in genomes:
+        net = neat.nn.FeedForwardNetwork.create(g, config)
+        nets.append(net)
+        greens.append(Green(150, 150, 0, 0, 30, 30, -1, 1))
+        reds1.append(Red(250, 250, 0, 0, 30, 30, -1, 1))
+        reds2.append(Red(200, 350, 0, 0, 30, 30, -1, 1))
+        g.fitness = 0
+        ge.append(g)
+
+    clock = pygame.time.Clock()
+    score = 0
+
+    red_nn = load_model('red-winner.pickle')
+
+    for red in reds1:
+        red.vel += 0.001
+
+    for red in reds2:
+        red.vel += 0.001
+
+    run = True
+    while run and len(greens) > 0:
+        clock.tick(1000)
+        score += 1
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                pygame.quit()
+                quit()
+
+        if len(greens) < 1:
+            run = False
+            break
+
+        # Check for collisions
+        for x, green in enumerate(greens):
+            if reds1[x].get_rect().colliderect(green.get_rect()) or reds2[x].get_rect().colliderect(green.get_rect()):
+                ge[greens.index(green)].fitness -= 1
+                nets.pop(greens.index(green))
+                ge.pop(greens.index(green))
+                greens.pop(greens.index(green))
+                reds1.pop(x)
+                reds2.pop(x)
+
+        for x, green in enumerate(greens):
+            ge[x].fitness += 1
+
+            output = nets[x].activate((green.x, green.y, reds1[x].x, reds1[x].y, reds2[x].x, reds2[x].y))
+
+            # Green movement calculations
+            if output[0] > 0.5 and green.x > green.vel:
+                green.aX = clamp(green.aX - 0.1, green.minvel, green.maxvel)
+            elif output[0] < 0.5 and green.x < WIN_WIDTH - green.width - green.vel:
+                green.aX = clamp(green.aX + 0.1, green.minvel, green.maxvel)
+            else:
+                green.aX = clamp(green.aX * 0.3, green.minvel, green.maxvel)
+
+            if output[1] > 0.5 and green.y > green.vel:
+                green.aY = clamp(green.aY - 0.1, green.minvel, green.maxvel)
+            elif output[1] < 0.5 and green.y < WIN_HEIGHT - green.height - green.vel:
+                green.aY = clamp(green.aY + 0.1, green.minvel, green.maxvel)
+            else:
+                green.aY = clamp(green.aY * 0.3, green.minvel, green.maxvel)
+
+            green.move()
+
+            red_output = red_nn.activate((green.x, green.y, reds1[x].x, reds1[x].y, reds2[x].x, reds2[x].y))
+
+            # Red1 movement calculations
+            if red_output[0] > 0.5 and reds1[x].x < WIN_WIDTH - reds1[x].width - reds1[x].vel:
+                reds1[x].x += reds1[x].vel
+            if red_output[0] < 0.5 and reds1[x].x > reds1[x].vel:
+                reds1[x].x -= reds1[x].vel
+            if red_output[1] > 0.5 and reds1[x].y < WIN_HEIGHT - reds1[x].height - reds1[x].vel:
+                reds1[x].y += reds1[x].vel
+            if red_output[1] < 0.5 and reds1[x].y > reds1[x].vel:
+                reds1[x].y -= reds1[x].vel
+
+            # Red2 movement calculations
+            if red_output[2] > 0.5 and reds2[x].x < WIN_WIDTH - reds2[x].width - reds2[x].vel:
+                reds2[x].x += reds2[x].vel
+            if red_output[2] < 0.5 and reds2[x].x > reds2[x].vel:
+                reds2[x].x -= reds2[x].vel
+            if red_output[3] > 0.5 and reds2[x].y < WIN_HEIGHT - reds2[x].height - reds2[x].vel:
+                reds2[x].y += reds2[x].vel
+            if red_output[3] < 0.5 and reds2[x].y > reds2[x].vel:
+                reds2[x].y -= reds2[x].vel
+
+        if score > 5050:
             pickle_out = open("green-winner.pickle", "wb")
             pickle.dump(nets[0], pickle_out)
             pickle_out.close()
@@ -210,7 +324,7 @@ def train_red(genomes, config):
         ge.append(g)
 
     clock = pygame.time.Clock()
-    score = 1250
+    score = 1000
 
     green_nn = load_model('green-winner.pickle')
 
@@ -218,6 +332,12 @@ def train_red(genomes, config):
     while run and len(reds1) > 0:
         clock.tick(1000)
         score -= 1
+
+        for red in reds1:
+            red.vel += 0.001
+
+        for red in reds2:
+            red.vel += 0.001
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -232,7 +352,8 @@ def train_red(genomes, config):
         # Check for collisions
         for x, green in enumerate(greens):
             if reds1[x].get_rect().colliderect(green.get_rect()) or reds2[x].get_rect().colliderect(green.get_rect()):
-                ge[greens.index(green)].fitness += 500
+                if score < 750:
+                    ge[greens.index(green)].fitness += 500
                 nets.pop(greens.index(green))
                 ge.pop(greens.index(green))
                 greens.pop(greens.index(green))
@@ -264,26 +385,29 @@ def train_red(genomes, config):
             output = nets[x].activate((green.x, green.y, reds1[x].x, reds1[x].y, reds2[x].x, reds2[x].y))
 
             # Red1 movement calculations
-            if output[0] > 0.5:
+            if output[0] > 0.5 and reds1[x].x < WIN_WIDTH - reds1[x].width - reds1[x].vel:
                 reds1[x].x += reds1[x].vel
-            if output[0] < 0.5:
+            if output[0] < 0.5 and reds1[x].x > reds1[x].vel:
                 reds1[x].x -= reds1[x].vel
-            if output[1] > 0.5:
+            if output[1] > 0.5 and reds1[x].y < WIN_HEIGHT - reds1[x].height - reds1[x].vel:
                 reds1[x].y += reds1[x].vel
-            if output[1] < 0.5:
+            if output[1] < 0.5 and reds1[x].y > reds1[x].vel:
                 reds1[x].y -= reds1[x].vel
 
             # Red2 movement calculations
-            if output[2] > 0.5:
+            if output[2] > 0.5 and reds2[x].x < WIN_WIDTH - reds2[x].width - reds2[x].vel:
                 reds2[x].x += reds2[x].vel
-            if output[2] < 0.5:
+            if output[2] < 0.5 and reds2[x].x > reds2[x].vel:
                 reds2[x].x -= reds2[x].vel
-            if output[3] > 0.5:
+            if output[3] > 0.5 and reds2[x].y < WIN_HEIGHT - reds2[x].height - reds2[x].vel:
                 reds2[x].y += reds2[x].vel
-            if output[3] < 0.5:
+            if output[3] < 0.5 and reds2[x].y > reds2[x].vel:
                 reds2[x].y -= reds2[x].vel
 
         if score < 0:
+            pickle_out = open("red-winner.pickle", "wb")
+            pickle.dump(nets[0], pickle_out)
+            pickle_out.close()
             break
 
         draw_window(WIN, greens, reds1, reds2, score)
@@ -316,14 +440,10 @@ def run_red(config_file):
     winner = p.run(train_red, 50)
     print('\nBest genome:\n{!s}'.format(winner))
 
-    pickle_out = open("red-winner.pickle", "wb")
-    pickle.dump(winner, pickle_out)
-    pickle_out.close()
 
-
-config_file_name = "config-red-1.txt"
+config_file_name = "config-green-1.txt"
 
 if __name__ == '__main__':
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, config_file_name)
-    run_red(config_path)
+    run_green(config_path)

@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4b20493b-4227-435b-b3cd-66a5a558803a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config-red-1.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/code.py" beforeDir="false" afterPath="$PROJECT_DIR$/code.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-feedforward.txt" beforeDir="false" afterPath="$PROJECT_DIR$/config-green-1.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dict.pickle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-green-1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/config-green-1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-red-1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/config-red-1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/green-winner.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/green-winner.pickle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/red-winner.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/red-winner.pickle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,22 +86,22 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1899" height="296" key="GridCell.Tab.0.bottom" timestamp="1606926518806">
+    <state width="1899" height="296" key="GridCell.Tab.0.bottom" timestamp="1606931322751">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="296" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606926518806" />
-    <state width="1899" height="296" key="GridCell.Tab.0.center" timestamp="1606926518805">
+    <state width="1899" height="296" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606931322751" />
+    <state width="1899" height="296" key="GridCell.Tab.0.center" timestamp="1606931322751">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="296" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606926518805" />
-    <state width="1899" height="296" key="GridCell.Tab.0.left" timestamp="1606926518805">
+    <state width="1899" height="296" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606931322751" />
+    <state width="1899" height="296" key="GridCell.Tab.0.left" timestamp="1606931322751">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="296" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606926518805" />
-    <state width="1899" height="296" key="GridCell.Tab.0.right" timestamp="1606926518805">
+    <state width="1899" height="296" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606931322751" />
+    <state width="1899" height="296" key="GridCell.Tab.0.right" timestamp="1606931322751">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="296" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606926518805" />
+    <state width="1899" height="296" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606931322751" />
     <state x="582" y="86" key="SettingsEditor" timestamp="1606915782263">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
